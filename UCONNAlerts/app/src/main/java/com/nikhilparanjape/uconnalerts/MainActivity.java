@@ -2,10 +2,15 @@ package com.nikhilparanjape.uconnalerts;
 
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.NotificationCompat;
@@ -40,18 +45,21 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GcmMessageHandler msg = new GcmMessageHandler();
 
         btnRegId = (Button) findViewById(R.id.btnGetRegId);
         etRegId = (EditText) findViewById(R.id.etRegId);
-        String mes = null;
-        btnRegId.setOnClickListener(this);
-        NotificationCompat.Builder mBuilder =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("UCONN Alert")
-                        .setContentText(msg.getMsg(mes));
 
+        btnRegId.setOnClickListener(this);
+
+        GcmMessageHandler msg = new GcmMessageHandler();
+        String mes = null;
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("UCONN Alert")
+                .setContentText(msg.getMsg(mes))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .build();
+    }
+    public static void sendNote(){
 
     }
     public void getRegId(){
@@ -83,6 +91,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         getRegId();
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

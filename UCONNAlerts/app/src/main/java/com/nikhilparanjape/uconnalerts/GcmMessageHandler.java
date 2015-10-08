@@ -69,7 +69,7 @@ public class GcmMessageHandler extends IntentService {
         handler.post(new Runnable() {
             public void run() {
 
-
+                MainActivity.sendNote();
                 Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
             }
         });
