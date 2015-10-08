@@ -16,5 +16,24 @@
         android:layout_width="match_parent"
         android:layout_height="250dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Alert:"
+        android:id="@+id/textView3"
+        android:layout_below="@+id/etRegId"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="58dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="GCM Message"
+        android:id="@+id/gcmView"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

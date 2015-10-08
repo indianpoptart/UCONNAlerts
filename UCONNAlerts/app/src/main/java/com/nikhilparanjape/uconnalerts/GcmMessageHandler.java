@@ -23,6 +23,7 @@ public class GcmMessageHandler extends IntentService {
     String mes;
     String messageType;
 
+
     NotificationCompat.Builder notification;
     PendingIntent pIntent;
     NotificationManager manager;
@@ -54,7 +55,6 @@ public class GcmMessageHandler extends IntentService {
         Log.i("GCM", "Received : (" + messageType + ")  " + mes);
         Toast.makeText(getApplicationContext(), mes,
                 Toast.LENGTH_LONG).show();
-
 
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 

@@ -58,6 +58,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 .setContentText(msg.getMsg(mes))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build();
+        TextView gcmView;
+        gcmView = (TextView) findViewById(R.id.gcmView);
+        gcmView.setText(msg.getMsg(mes));
     }
     public static void sendNote(){
 

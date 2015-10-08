@@ -37,4 +37,13 @@
         android:layout_gravity="center_horizontal"
         android:checked="false" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="GCM Message"
+        android:id="@+id/gcmView"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
 </LinearLayout>
