@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,45 +26,63 @@ import com.google.android.gms.iid.InstanceID;
 import java.io.IOException;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements View.OnClickListener {
     String SENDER_ID = "527242612864";
+    String SERVER_URL = "https://android.googleapis.com/gcm/send";
 
-    TextView mDisplay;
-    TextView bDisplay;
-
+    Button btnRegId;
+    EditText etRegId;
+    GoogleCloudMessaging gcm;
+    String regid;
+    String PROJECT_NUMBER = "527242612864";
+    static TextView mDisplay;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mDisplay = (TextView) findViewById(R.id.display);
-        InstanceID instanceID = InstanceID.getInstance(this);
-        try {
-            String token = instanceID.getToken(getString(R.string.gcm_defaultSenderId), GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
-            mDisplay.setText(token);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        GcmMessageHandler msg = new GcmMessageHandler();
 
-        bDisplay = (TextView) findViewById(R.id.disp);
-        bDisplay.setText(R.string.gcm_defaultSenderId);
-
+        btnRegId = (Button) findViewById(R.id.btnGetRegId);
+        etRegId = (EditText) findViewById(R.id.etRegId);
+        String mes = null;
+        btnRegId.setOnClickListener(this);
+        NotificationCompat.Builder mBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("UCONN Alert")
+                        .setContentText(msg.getMsg(mes));
 
 
     }
+    public void getRegId(){
+        new AsyncTask<Void, Void, String>() {
+            @Override
+            protected String doInBackground(Void... params) {
+                String msg = "";
+                try {
+                    if (gcm == null) {
+                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    }
+                    regid = gcm.register(PROJECT_NUMBER);
+                    msg = "Device registered, registration ID=" + regid;
+                    Log.i("GCM",  msg);
 
+                } catch (IOException ex) {
+                    msg = "Error :" + ex.getMessage();
 
-    public void onMessageReceived(String from, Bundle data) {
-        String message = data.getString("message");
-       // Log.d(TAG, "From: " + from);
-       // Log.d(TAG, "Message: " + message);
+                }
+                return msg;
+            }
 
-        if (from.startsWith("/topics/")) {
-            // message received from some topic.
-        } else {
-            // normal downstream message.
-        }
-
-        // ...
+            @Override
+            protected void onPostExecute(String msg) {
+                etRegId.setText(msg + "\n");
+            }
+        }.execute(null, null, null);
+    }
+    @Override
+    public void onClick(View v) {
+        getRegId();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
