@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 23
@@ -6,8 +7,8 @@ android {
 
     defaultConfig {
         applicationId "com.nikhilparanjape.uconnalerts"
-        minSdkVersion 15
-        targetSdkVersion 22
+        minSdkVersion 20
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -22,7 +23,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('src/android-async-http-1.4.9.jar')
-    apply plugin: 'com.google.gms.google-services'
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.google.android.gms:play-services-gcm:8.1.0'
     compile 'com.google.android.gms:play-services:8.1.0'
