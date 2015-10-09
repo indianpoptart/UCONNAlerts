@@ -25,8 +25,8 @@ This app is for UCONN Students and Faculty. It sends push notifications for each
 
 ## License
 
-The Parks and Rec  source code is released under the [MIT License](https://github.com/indianpoptart/Parks-and-Recreation/blob/master/LICENSE).
+The UCONN Alerts  source code is released under the [MIT License](https://github.com/indianpoptart/UCONNAlerts/blob/master/LICENSE).
 
-While it is not strictly forbidden by the license, I would greatly appreciate it if you didn't redistribute this app exactly the way it is in the Play Store. There's nothing stopping you, but please don't do it.
+While it is not strictly forbidden by the license, I would greatly appreciate it if you didn't redistribute this app exactly the way it is in the Play Store. There's nothing stopping you, but please don't do it. You can use the code for your app however, but no direct copy.
 
 ## 3rd Party API's
