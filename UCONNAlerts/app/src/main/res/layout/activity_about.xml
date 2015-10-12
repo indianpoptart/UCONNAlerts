@@ -21,29 +21,20 @@
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal" />
 
-    <RadioButton
-        android:layout_width="wrap_content"
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Storrs Campus"
-        android:id="@+id/radioButton"
-        android:layout_gravity="center_horizontal"
-        android:checked="false" />
-
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stamford Campus"
-        android:id="@+id/radioButton2"
-        android:layout_gravity="center_horizontal"
-        android:checked="false" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="GCM Message"
-        android:id="@+id/gcmView"
-        android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true" />
+        android:orientation="vertical">
+        <RadioButton android:id="@+id/radio_storrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Storrs Campus"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/radio_stamford"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stamford Campus"
+            android:onClick="onRadioButtonClicked"/>
+    </RadioGroup>
 
 </LinearLayout>

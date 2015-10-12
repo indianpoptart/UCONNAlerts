@@ -13,6 +13,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 
@@ -25,14 +27,23 @@ public class AboutActivity extends Activity {
         ActionBar bar = getActionBar();
         bar.setDisplayShowHomeEnabled(false);
         bar.setTitle("About");
-
-        GcmMessageHandler msg = new GcmMessageHandler();
-        String mes = null;
-        TextView gcmView;
-        gcmView = (TextView) findViewById(R.id.gcmView);
-        gcmView.setText(msg.getMsg(mes));
     }
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
 
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_storrs:
+                if (checked)
+                    //Tell main app to filter notifications for storrs only
+                    break;
+            case R.id.radio_stamford:
+                if (checked)
+                    //Tell main app to filter notifications for storrs only
+                    break;
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.service.media.MediaBrowserService;
@@ -55,22 +56,35 @@ public class GcmMessageHandler extends IntentService {
         Log.i("GCM", "Received : (" + messageType + ")  " + mes);
         Toast.makeText(getApplicationContext(), mes,
                 Toast.LENGTH_LONG).show();
-
+        sendNote(mes);
         GcmBroadcastReceiver.completeWakefulIntent(intent);
 
 
     }
+
     public String getMsg(String mesg){
         mesg = mes;
         return mesg;
+    }
+    public void sendNote(String mes){
+        //PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        Resources r = getResources();
+        Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.uconn)
+                .setContentTitle("UCONN Alert")
+                .setContentText(mes)
+                .build();
+
+        notification.defaults|= Notification.DEFAULT_SOUND;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(0, notification);
+
     }
 
     public void showToast(){
         handler.post(new Runnable() {
             public void run() {
-
-                MainActivity.sendNote();
-                Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
             }
         });
 
