@@ -63,9 +63,9 @@ public class AboutActivity extends Activity {
                     break;
         }
     }
-
     public static String getCampus(){
-            return choice;
+
+        return choice;
     }
     public String stamChoice(){
         return stam;

@@ -69,28 +69,20 @@ public class GcmMessageHandler extends IntentService {
         return mesg;
     }
     public void sendNote(String mes){
-        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        Resources r = getResources();
+        PendingIntent pi = PendingIntent.getActivity(this, 1, new Intent(this, MainActivity.class), 1);
+        //Resources r = getResources();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(mes)
                 .setSmallIcon(R.drawable.uconn)
                 .setContentTitle("UCONN Alert")
                 .setContentIntent(pi)
                 .setContentText(mes)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .build();
 
         notification.defaults|= Notification.DEFAULT_SOUND;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
-
-    }
-
-    public void showToast(){
-        handler.post(new Runnable() {
-            public void run() {
-                //Toast.makeText(getApplicationContext(),mes , Toast.LENGTH_LONG).show();
-            }
-        });
+        notificationManager.notify(1, notification);
 
     }
 }
