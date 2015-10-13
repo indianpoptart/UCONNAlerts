@@ -51,9 +51,11 @@ public class GcmMessageHandler extends IntentService {
         // in your BroadcastReceiver.
         messageType = gcm.getMessageType(intent);
 
-        mes = extras.getString("stamford");
-        showToast();
-        Log.i("GCM", "Received : (" + messageType + ")  " + mes);
+        String campus = AboutActivity.getCampus();
+        mes = extras.getString(campus);
+
+        //showToast();
+        Log.i("GCM", "Received : (" + messageType + ")  " + mes + "Campus : " + AboutActivity.getCampus());
         Toast.makeText(getApplicationContext(), mes,
                 Toast.LENGTH_LONG).show();
         sendNote(mes);
@@ -70,8 +72,10 @@ public class GcmMessageHandler extends IntentService {
         PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
         Resources r = getResources();
         Notification notification = new NotificationCompat.Builder(this)
+                .setTicker(mes)
                 .setSmallIcon(R.drawable.uconn)
                 .setContentTitle("UCONN Alert")
+                .setContentIntent(pi)
                 .setContentText(mes)
                 .build();
 

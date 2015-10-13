@@ -50,6 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         etRegId = (EditText) findViewById(R.id.etRegId);
 
         btnRegId.setOnClickListener(this);
+
     }
     public void getRegId(){
         new AsyncTask<Void, Void, String>() {
