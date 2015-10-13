@@ -51,7 +51,7 @@ public class GcmMessageHandler extends IntentService {
         // in your BroadcastReceiver.
         messageType = gcm.getMessageType(intent);
 
-        mes = extras.getString("title");
+        mes = extras.getString("stamford");
         showToast();
         Log.i("GCM", "Received : (" + messageType + ")  " + mes);
         Toast.makeText(getApplicationContext(), mes,
@@ -67,7 +67,7 @@ public class GcmMessageHandler extends IntentService {
         return mesg;
     }
     public void sendNote(String mes){
-        //PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
         Resources r = getResources();
         Notification notification = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.uconn)
