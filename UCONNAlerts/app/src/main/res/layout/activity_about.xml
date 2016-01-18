@@ -26,16 +26,18 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <RadioButton android:id="@+id/radio_storrs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Storrs Campus"
-            android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/radio_stamford"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stamford Campus"
             android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/radio_storrs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Storrs Campus"
+            android:onClick="onRadioButtonClicked"
+            android:checked="false" />
+
     </RadioGroup>
 
 </LinearLayout>

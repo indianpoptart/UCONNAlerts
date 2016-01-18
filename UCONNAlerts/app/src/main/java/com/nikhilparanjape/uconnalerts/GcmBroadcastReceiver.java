@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
+import com.google.android.gms.gcm.GcmReceiver;
+
+public class GcmBroadcastReceiver extends GcmReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

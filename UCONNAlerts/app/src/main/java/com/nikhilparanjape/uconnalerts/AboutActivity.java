@@ -47,6 +47,8 @@ public class AboutActivity extends Activity {
     }
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
+        SharedPreferences sp = getSharedPreferences("setting", MODE_PRIVATE);
+        SharedPreferences.Editor e = sp.edit();
 
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -54,17 +56,19 @@ public class AboutActivity extends Activity {
         switch(view.getId()) {
             case R.id.radio_storrs:
                 if (checked)
-
                     choice = "storrs";
+                    e.putInt("checked", 2131558510);
+                    e.commit();
                     break;
             case R.id.radio_stamford:
                 if (checked)
                     choice = "stamford";
+                    e.putInt("checked", 2131558509);
+                    e.commit();
                     break;
         }
     }
     public static String getCampus(){
-
         return choice;
     }
     public String stamChoice(){
@@ -79,7 +83,7 @@ public class AboutActivity extends Activity {
         super.onPause();
         RadioGroup rg = (RadioGroup) findViewById(R.id.campusGroup);
         int id = rg.getCheckedRadioButtonId();
-        SharedPreferences sp = getSharedPreferences("setting", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
         String ed = Integer.toString(id);
         Log.i("RadioID", ed);
