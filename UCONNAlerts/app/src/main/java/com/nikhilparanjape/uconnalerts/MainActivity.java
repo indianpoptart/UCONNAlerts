@@ -2,24 +2,16 @@ package com.nikhilparanjape.uconnalerts;
 
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.v7.app.NotificationCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,58 +20,66 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
-
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.ResponseHandlerInterface;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import static com.nikhilparanjape.uconnalerts.CommonUtilities.SERVER_URL;
-import static com.nikhilparanjape.uconnalerts.CommonUtilities.TAG;
+import cz.msebera.android.httpclient.Header;
 
 
-public class MainActivity extends Activity implements View.OnClickListener {
-    String SERVER_URL = "https://nikhilp.org/gcm/register.php";
+public class MainActivity extends Activity{
+    String SERVER_URL = "https://nikhilp.org/gcm/gcm.php";
 
-    Button btnRegId;
-    EditText etRegId;
-    GoogleCloudMessaging gcm;
-    String regid;
     String PROJECT_NUMBER = "527242612864";
     static TextView mDisplay;
+    RequestParams params = new RequestParams();
+    GoogleCloudMessaging gcmObj;
+    Context applicationContext;
+    String regId = "";
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+
+    AsyncTask<Void, Void, String> createRegIdTask;
+
+    public static final String REG_ID = "regId";
+    EditText emailET;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        registerInBackground();
 
-        StrictMode.setThreadPolicy(policy);
-        Parse.initialize(this, "e8IO5XPl2qh0LBzU6Kjdu5mO2gcWeLwyHj20TSnH", "jidDCFQ8JMfoVmyjNV7HtJ1nSebOmuYlRe363Yym");
-        ParseInstallation.getCurrentInstallation().saveInBackground();
-        getRegId();
     }
-    public void getRegId(){
+    // When Register Me button is clicked
+    public void RegisterUser(View view) {
+
+        if (checkPlayServices()) {
+
+            // Register Device in GCM Server
+            registerInBackground();
+        }
+        // When Email is invalid
+        else {
+            Toast.makeText(applicationContext, "Please enter valid email",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+    // AsyncTask to register Device in GCM Server
+    private void registerInBackground() {
         new AsyncTask<Void, Void, String>() {
             @Override
-
             protected String doInBackground(Void... params) {
                 String msg = "";
                 try {
-                    if (gcm == null) {
-                        gcm = GoogleCloudMessaging.getInstance(getApplicationContext());
+                    if (gcmObj == null) {
+                        gcmObj = GoogleCloudMessaging.getInstance(getApplicationContext());
                     }
-                    regid = gcm.register(PROJECT_NUMBER);
-                    msg = regid;
+                    regId = gcmObj.register(PROJECT_NUMBER);
+                    msg = "Device registered, registration ID=" + regId;
                     Log.i("GCM",  msg);
 
                 } catch (IOException ex) {
@@ -91,64 +91,95 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             @Override
             protected void onPostExecute(String msg) {
-                Map<String, String> params = new HashMap<String, String>();
-                String serverUrl = SERVER_URL;
-                params.put("regId", msg);
-                try {
-                    post(serverUrl, msg);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (!TextUtils.isEmpty(regId)) {
+                    // Store RegId created by GCM Server in SharedPref
+                    storeRegIdinSharedPref(applicationContext, regId);
+                    Toast.makeText(
+                            applicationContext,
+                            "Registered with GCM Server successfully.nn"
+                                    + msg, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(
+                            applicationContext,
+                            "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time."
+                                    + msg, Toast.LENGTH_LONG).show();
                 }
             }
         }.execute(null, null, null);
     }
-    @Override
-    public void onClick(View v) {
-        getRegId();
+
+    // Store  RegId and Email entered by User in SharedPref
+    private void storeRegIdinSharedPref(Context context, String regId) {
+        SharedPreferences prefs = getSharedPreferences("UserDetails",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(REG_ID, regId);
+        editor.commit();
+        storeRegIdinServer();
 
     }
-    private static void post(String endpoint, String gcmRegId)
-            throws IOException {
 
-        URL url;
-        try {
-            url = new URL(endpoint);
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException("invalid url: " + endpoint);
-        }
-        String body = gcmRegId;
-        Log.v(TAG, "Posting '" + body + "' to " + url);
-        byte[] bytes = body.getBytes();
-        HttpURLConnection conn = null;
-        try {
-            Log.e("URL", "> " + url);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setFixedLengthStreamingMode(bytes.length);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded;charset=UTF-8");
-            // post the request
-            OutputStream out = conn.getOutputStream();
-            out.write(body.getBytes());
-            out.close();
-            // handle the response
-            int status = conn.getResponseCode();
-            if (status != 200) {
-                throw new IOException("Post failed with error code " + status);
+    // Share RegID with GCM Server Application (Php)
+    private void storeRegIdinServer() {
+        RequestParams params = new RequestParams();
+        params.put("regId", regId);
+        // Make RESTful webservice call using AsyncHttpClient object
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(ApplicationConstants.APP_SERVER_URL, params, new AsyncHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d("UCONN","Registered");
             }
-            else if(status == 200){
-                Log.v(TAG, "Success");
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                // When Http response code is '404'
+                if (statusCode == 404) {
+                    Toast.makeText(applicationContext,
+                            "Requested resource not found",
+                            Toast.LENGTH_LONG).show();
+                }
+                // When Http response code is '500'
+                else if (statusCode == 500) {
+                    Toast.makeText(applicationContext,
+                            "Something went wrong at server end",
+                            Toast.LENGTH_LONG).show();
+                }
+                // When Http response code other than 404, 500
+                else {
+                    Toast.makeText(
+                            applicationContext,
+                            "Unexpected Error occcured! [Most common Error: Device might "
+                                    + "not be connected to Internet or remote server is not up and running], check for other errors as well",
+                            Toast.LENGTH_LONG).show();
+                }
             }
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
-            }
-        }
+
+        });
+
     }
 
-
+    // Check if Google Playservices is installed in Device or not
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        // When Play services not found in device
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                // Show Error dialog to install Play services
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(
+                        applicationContext,
+                        "This device doesn't support Play services, App will not work normally",
+                        Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -165,6 +196,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    protected void onResumre(){
+        super.onResume();
+        checkPlayServices();
     }
 
 }
