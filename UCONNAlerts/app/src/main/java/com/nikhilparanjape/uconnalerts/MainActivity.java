@@ -23,7 +23,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.ResponseHandlerInterface;
+
 import java.io.IOException;
 
 import cz.msebera.android.httpclient.Header;
@@ -34,7 +34,6 @@ public class MainActivity extends Activity{
 
     String PROJECT_NUMBER = "527242612864";
     static TextView mDisplay;
-    RequestParams params = new RequestParams();
     GoogleCloudMessaging gcmObj;
     Context applicationContext;
     String regId = "";
@@ -91,19 +90,7 @@ public class MainActivity extends Activity{
 
             @Override
             protected void onPostExecute(String msg) {
-                if (!TextUtils.isEmpty(regId)) {
-                    // Store RegId created by GCM Server in SharedPref
-                    storeRegIdinSharedPref(applicationContext, regId);
-                    Toast.makeText(
-                            applicationContext,
-                            "Registered with GCM Server successfully.nn"
-                                    + msg, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(
-                            applicationContext,
-                            "Reg ID Creation Failed.nnEither you haven't enabled Internet or GCM server is busy right now. Make sure you enabled Internet and try registering again after some time."
-                                    + msg, Toast.LENGTH_LONG).show();
-                }
+                storeRegIdinServer();
             }
         }.execute(null, null, null);
     }
@@ -115,7 +102,7 @@ public class MainActivity extends Activity{
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(REG_ID, regId);
         editor.commit();
-        storeRegIdinServer();
+        //storeRegIdinServer();
 
     }
 
@@ -125,10 +112,10 @@ public class MainActivity extends Activity{
         params.put("regId", regId);
         // Make RESTful webservice call using AsyncHttpClient object
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post(ApplicationConstants.APP_SERVER_URL, params, new AsyncHttpResponseHandler(){
+        client.get(ApplicationConstants.APP_SERVER_URL, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Log.d("UCONN","Registered");
+                Log.d("UCONN", "Registered");
             }
 
             @Override

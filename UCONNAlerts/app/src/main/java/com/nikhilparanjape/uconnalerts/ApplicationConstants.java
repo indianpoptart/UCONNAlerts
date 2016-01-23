@@ -11,6 +11,6 @@ public interface ApplicationConstants {
     // Google Project Number
     static final String GOOGLE_PROJ_ID = "527242612864";
     // Message Key
-    static final String MSG_KEY = "stamford";
+    static final String MSG_KEY = "uconn";
 
 }

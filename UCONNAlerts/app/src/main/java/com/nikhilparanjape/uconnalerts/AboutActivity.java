@@ -35,7 +35,7 @@ public class AboutActivity extends Activity {
         bar.setTitle("About");
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.campusGroup);
-        SharedPreferences sp = getSharedPreferences("setting", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
 
         if(sp.getInt("checked", 2131558509) != 2131558509) {
 
@@ -47,7 +47,7 @@ public class AboutActivity extends Activity {
     }
     public void onRadioButtonClicked(View view) {
         // Is the button now checked?
-        SharedPreferences sp = getSharedPreferences("setting", MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         SharedPreferences.Editor e = sp.edit();
 
         boolean checked = ((RadioButton) view).isChecked();
