@@ -25,6 +25,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -50,6 +56,20 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
         SharedPreferences sp = getSharedPreferences("prefs", MODE_PRIVATE);
         registerInBackground();
+
+        String msg = "";
+        try {
+            if (gcmObj == null) {
+                gcmObj = GoogleCloudMessaging.getInstance(getApplicationContext());
+            }
+            regId = gcmObj.register(PROJECT_NUMBER);
+            msg = "Device registered, registration ID=" + regId;
+            Log.i("GCM",  msg);
+
+        } catch (IOException ex) {
+            msg = "Error :" + ex.getMessage();
+
+        }
 
     }
     // When Register Me button is clicked
@@ -122,20 +142,20 @@ public class MainActivity extends Activity{
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 // When Http response code is '404'
                 if (statusCode == 404) {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(getApplicationContext(),
                             "Requested resource not found",
                             Toast.LENGTH_LONG).show();
                 }
                 // When Http response code is '500'
                 else if (statusCode == 500) {
-                    Toast.makeText(applicationContext,
+                    Toast.makeText(getApplicationContext(),
                             "Something went wrong at server end",
                             Toast.LENGTH_LONG).show();
                 }
                 // When Http response code other than 404, 500
                 else {
                     Toast.makeText(
-                            applicationContext,
+                            getApplicationContext(),
                             "Unexpected Error occcured! [Most common Error: Device might "
                                     + "not be connected to Internet or remote server is not up and running], check for other errors as well",
                             Toast.LENGTH_LONG).show();
@@ -144,6 +164,54 @@ public class MainActivity extends Activity{
 
         });
 
+    }
+    private static void post(String endpoint, Map<String, String> params)
+            throws IOException {
+
+        URL url;
+        try {
+            url = new URL(endpoint);
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException("invalid url: " + endpoint);
+        }
+        StringBuilder bodyBuilder = new StringBuilder();
+        Iterator<Map.Entry<String, String>> iterator = params.entrySet().iterator();
+        // constructs the POST body using the parameters
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> param = iterator.next();
+            bodyBuilder.append(param.getKey()).append('=')
+                    .append(param.getValue());
+            if (iterator.hasNext()) {
+                bodyBuilder.append('&');
+            }
+        }
+        String body = bodyBuilder.toString();
+        Log.v("UCONNALERTS", "Posting '" + body + "' to " + url);
+        byte[] bytes = body.getBytes();
+        HttpURLConnection conn = null;
+        try {
+            Log.e("URL", "> " + url);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setFixedLengthStreamingMode(bytes.length);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded;charset=UTF-8");
+            // post the request
+            OutputStream out = conn.getOutputStream();
+            out.write(bytes);
+            out.close();
+            // handle the response
+            int status = conn.getResponseCode();
+            if (status != 200) {
+                throw new IOException("Post failed with error code " + status);
+            }
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
     }
 
     // Check if Google Playservices is installed in Device or not

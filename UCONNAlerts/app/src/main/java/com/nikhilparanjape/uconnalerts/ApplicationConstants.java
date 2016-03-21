@@ -6,7 +6,7 @@ package com.nikhilparanjape.uconnalerts;
 public interface ApplicationConstants {
 
     // Php Application URL to store Reg ID created
-    static final String APP_SERVER_URL = "https://nikhilp.org/gcm/gcm.php?shareRegId=true";
+    static final String APP_SERVER_URL = "https://nikhilp.org/gcm/register.php";
 
     // Google Project Number
     static final String GOOGLE_PROJ_ID = "527242612864";
