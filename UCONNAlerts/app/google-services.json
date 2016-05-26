@@ -1,38 +1,71 @@
 {
   "project_info": {
+<<<<<<< HEAD
     "project_number": "527242612864",
     "firebase_url": "https://uconnalerts-1091.firebaseio.com",
     "project_id": "uconnalerts-1091",
     "storage_bucket": "uconnalerts-1091.appspot.com"
+=======
+    "project_id": "uconnalerts-1091",
+    "project_number": "527242612864",
+    "name": "UCONNAlerts"
+>>>>>>> origin/master
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:527242612864:android:611ca31a1738d5bc",
+<<<<<<< HEAD
+=======
+        "client_id": "android:com.nikhilparanjape.uconnalerts",
+        "client_type": 1,
+>>>>>>> origin/master
         "android_client_info": {
           "package_name": "com.nikhilparanjape.uconnalerts"
         }
       },
+<<<<<<< HEAD
       "oauth_client": [
         {
           "client_id": "527242612864-ih9gc9noph4lmfrudhis47n1o65ranpf.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
+=======
+      "oauth_client": [],
+>>>>>>> origin/master
       "api_key": [],
       "services": {
         "analytics_service": {
           "status": 1
         },
+<<<<<<< HEAD
+=======
+        "cloud_messaging_service": {
+          "status": 2,
+          "apns_config": []
+        },
+>>>>>>> origin/master
         "appinvite_service": {
           "status": 1,
           "other_platform_oauth_client": []
         },
+<<<<<<< HEAD
+=======
+        "google_signin_service": {
+          "status": 1
+        },
+>>>>>>> origin/master
         "ads_service": {
           "status": 1
         }
       }
     }
   ],
+<<<<<<< HEAD
   "configuration_version": "1"
+=======
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+>>>>>>> origin/master
 }
