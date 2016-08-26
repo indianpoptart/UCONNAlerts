@@ -1,1 +1,42 @@
-{"project_info":{"project_id":"uconnalerts-1091","project_number":"527242612864","name":"UCONNAlerts"},"client":[{"client_info":{"mobilesdk_app_id":"1:527242612864:android:611ca31a1738d5bc","client_id":"android:com.nikhilparanjape.uconnalerts","client_type":1,"android_client_info":{"package_name":"com.nikhilparanjape.uconnalerts"}},"oauth_client":[],"api_key":[],"services":{"analytics_service":{"status":1},"cloud_messaging_service":{"status":2,"apns_config":[]},"appinvite_service":{"status":1,"other_platform_oauth_client":[]},"google_signin_service":{"status":1},"ads_service":{"status":1}}}],"client_info":[],"ARTIFACT_VERSION":"1"}
+{
+  "project_info": {
+    "project_number": "321641182890",
+    "firebase_url": "https://uconnalerts-7a447.firebaseio.com",
+    "project_id": "uconnalerts-7a447",
+    "storage_bucket": "uconnalerts-7a447.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321641182890:android:611ca31a1738d5bc",
+        "android_client_info": {
+          "package_name": "com.nikhilparanjape.uconnalerts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321641182890-gj5ve2fqbddevsc7k4qc1v5gihvel4t2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFvy2NCmYutwfJ34uY8DpkQn2f_eyiAXg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
